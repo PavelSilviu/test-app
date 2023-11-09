@@ -1,3 +1,5 @@
+const { applyExtraSetup } = require('./association');
+
 module.exports = function getModels(sequelize, Sequelize) {
   'use strict';
 
@@ -31,6 +33,12 @@ module.exports = function getModels(sequelize, Sequelize) {
   const arr = [
     /************************ Information *********************/
     {path: __dirname + '/information.js', sync: true},
+    /************************ Person *********************/
+    {path: __dirname + '/person.js', sync: true},  
+    /************************ Car *********************/
+    {path: __dirname + '/car.js', sync: true},  
+    /************************ assoc file *********************/
+    {path: __dirname + '/association.js', sync: false},  
   ];
 
   const syncTables = [];
@@ -40,7 +48,7 @@ module.exports = function getModels(sequelize, Sequelize) {
       const model = require(path.join(file.path))(sequelize, Sequelize);
       syncTables.push(model);
     } else {
-      require(path.join(file.path))(sequelize, Sequelize);
+      // require(path.join(file.path))(sequelize, Sequelize);
     }
   });
 
@@ -48,19 +56,25 @@ module.exports = function getModels(sequelize, Sequelize) {
     const tmp = arr.find(r => r.path === fileTree[i]);
 
     if (!tmp) {
+      // define models
       const model = require(fileTree[i])(sequelize, Sequelize);
       let modelName = fileTree[i].substring(fileTree[i].lastIndexOf('/') + 1, fileTree[i].indexOf('.js'));
       modelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
       console.error('Nu este introdusă ruta pentru modelul: ' + modelName);
 
+      // add associations
+      applyExtraSetup(sequelize);
+
+      // add models to array 
       syncTables.push(model);
     }
   }
 
+  // sync models
   if (syncTables.length && process.env.RUN_CRON === 'true') {
     _.each(syncTables, file => {
       console.info(file);
-      file.sync({alter: true, logging: false});
+      file.sync({ alter: true, logging: false });
     });
   }
 
