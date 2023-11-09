@@ -1,14 +1,14 @@
 module.exports = app => {
     'use strict';
     const express         = require('express');
-    const informationCtrl = require('../controllers/informationCtrl')(app.locals.db);
+    const carCtrl = require('../controllers/carCtrl')(app.locals.db);
     const router          = express.Router();
   
-    // router.post('/', informationCtrl.create);
-    // router.put('/', informationCtrl.update);
-    // router.get('/', informationCtrl.findAll);
-    // router.get('/:id', informationCtrl.find);
-    // router.delete('/:id', informationCtrl.destroy);
+    router.post('/', carCtrl.create);
+    router.put('/', carCtrl.update);
+    router.get('/', carCtrl.findAll);
+    router.get('/:id', carCtrl.find);
+    router.delete('/:id', carCtrl.destroy);
   
     return router;
   };

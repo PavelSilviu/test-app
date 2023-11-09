@@ -12,6 +12,10 @@ module.exports = (sequelize, DataType) => {
             type: DataType.NUMERIC(0, 4),
             allowNull: false,
         },
+        capacity: {
+            type: DataType.NUMERIC(0, 4),
+            allowNull: false,
+        },
         tax: {
             type: DataType.NUMERIC(0, 4),
             allowNull: false,

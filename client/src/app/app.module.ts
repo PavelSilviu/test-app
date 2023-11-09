@@ -16,6 +16,10 @@ import { InformationComponent } from './components/information/information.compo
 import { InformationModalComponent } from './components/information/information-modal/information-modal.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { MatTooltipModule, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { PersonComponent } from './components/person/person.component';
+//import { PersonModalComponent } from './components/person/person-modal/person-modal.component';
+import { CarComponent } from './components/car/car.component';
+import { CarModalComponent } from './components/car/car-modal/car-modal.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,10 @@ import { MatTooltipModule, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material
     HeaderComponent,
     InformationComponent,
     InformationModalComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PersonComponent,
+    CarComponent,
+    CarModalComponent,
   ],
   imports: [
     BrowserModule,
