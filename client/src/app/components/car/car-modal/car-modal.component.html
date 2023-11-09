@@ -4,38 +4,78 @@
 
 <div class='modal-body'>
   <div class='row'>
-    <label class='col-2 control-label'>Brand*</label>
+    <label class='col-2 control-label'>Marcă*</label>
     <div class='col-9'>
-      <input [(ngModel)]='modal.brand' class='form-control' placeholder='Brand...' maxlength='200'/>
+      <input name="brand" [(ngModel)]='modal.brand' class='form-control' placeholder='Marcă...' maxlength='200' required #brand="ngModel"/>
+      <div
+        *ngIf="brand.invalid && (showError || brand.touched)" class=""
+      >
+        <div *ngIf="brand.errors?.['required']">Brandul este un câmp obligatoriu!</div>
+        <div *ngIf="brand.errors?.['maxlength']">
+          Brandul trebuie să conțină maxim 200 caractere!
+        </div>
+      </div>
     </div>
   </div>
   <div class='row'>
     <label class='col-2 control-label'>Model*</label>
     <div class='col-9'>
-      <input [(ngModel)]='modal.model' class='form-control' placeholder='Model...' maxlength='200'/>
+      <input name="model" [(ngModel)]='modal.model' class='form-control' placeholder='Model...' maxlength='200' required #model="ngModel"/>
+      <div
+        *ngIf="model.invalid && (showError || model.touched)"
+      >
+        <div *ngIf="model.errors?.['required']">Modelul este un câmp obligatoriu!</div>
+        <div *ngIf="model.errors?.['maxlength']">
+          Modelul trebuie să conțină maxim 200 caractere!
+        </div>
+      </div>
     </div>
   </div>
   <div class='row'>
-    <label class='col-2 control-label'>Year*</label>
+    <label class='col-2 control-label'>Anul fabricației*</label>
     <div class='col-9'>
-      <input type='number' [(ngModel)]='modal.year' class='form-control' placeholder='Year...' maxlength='4'/>
+      <input name="year" type='number' [(ngModel)]='modal.year' class='form-control' placeholder='Anul fabricației...' max='9999' required #year="ngModel"/>
+      <div
+        *ngIf="year.invalid && (showError || year.touched)"
+      >
+        <div *ngIf="year.errors?.['required']">Anul fabricației este un câmp obligatoriu!</div>
+        <div *ngIf="year.errors?.['max']">
+          Anul trebuie să conțină maxim 4 cifre!
+        </div>
+      </div>
     </div>
   </div>
   <div class='row'>
-    <label class='col-2 control-label'>Capacity*</label>
+    <label class='col-2 control-label'>Capacitate*</label>
     <div class='col-9'>
-      <input type='number' [(ngModel)]='modal.capacity' class='form-control' placeholder='Capacity...' maxlength='4'/>
+      <input name="capacity" type='number' [(ngModel)]='modal.capacity' class='form-control' placeholder='Capacitate...' max='9999' required #capacity="ngModel"/>
+      <div
+        *ngIf="capacity.invalid && (showError || capacity.touched)"
+      >
+        <div *ngIf="capacity.errors?.['required']">Capacitatea este un câmp obligatoriu!</div>
+        <div *ngIf="capacity.errors?.['max']">
+          Capacitatea trebuie să conțină maxim 4 cifre!
+        </div>
+      </div>
     </div>
   </div>
   <div class='row'>
-    <label class='col-2 control-label'>Tax*</label>
+    <label class='col-2 control-label'>Taxa de impozit*</label>
     <div class='col-9'>
-      <input type='number' [(ngModel)]='modal.tax' class='form-control' placeholder='Tax...' maxlength='4'/>
+      <input name="tax" type='number' [(ngModel)]='modal.tax' class='form-control' placeholder='Taxa de impozit...' max='9999' required #tax="ngModel"/>
+      <div
+        *ngIf="tax.invalid && (showError || tax.touched)"
+      >
+        <div *ngIf="tax.errors?.['required']">Taxa de impozit este un câmp obligatoriu!</div>
+        <div *ngIf="tax.errors?.['max']">
+          Taxa trebuie să conțină maxim 4 cifre!
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <div class='modal-footer'>
   <button type='button' class='btn btn-outline-dark' (click)='activeModal.dismiss()'>Renunță</button>
-  <button type='button' class='btn btn-success' (click)='save()'>Salvează</button>
+  <button type='button' class='btn btn-success' (click)='save(brand, model, tax, year, capacity)'>Salvează</button>
 </div>

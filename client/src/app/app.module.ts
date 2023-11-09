@@ -20,6 +20,7 @@ import { PersonComponent } from './components/person/person.component';
 //import { PersonModalComponent } from './components/person/person-modal/person-modal.component';
 import { CarComponent } from './components/car/car.component';
 import { CarModalComponent } from './components/car/car-modal/car-modal.component';
+import { PersonModalComponent } from './components/person/person-modal/person-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { CarModalComponent } from './components/car/car-modal/car-modal.componen
     InformationModalComponent,
     ConfirmDialogComponent,
     PersonComponent,
+    PersonModalComponent,
     CarComponent,
     CarModalComponent,
   ],

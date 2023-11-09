@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { REPLACE_DIACRITICS } from 'src/app/utils/utils-input';
 import { ToastrService } from 'ngx-toastr';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-car-modal',
@@ -13,6 +14,8 @@ export class CarModalComponent implements OnInit {
   @Input() id_car: number | undefined;
 
   modal = {} as any;
+
+  showError : boolean = false;
 
   constructor(private _spinner: NgxSpinnerService, public activeModal: NgbActiveModal, private toastr: ToastrService) {
   }
@@ -27,21 +30,27 @@ export class CarModalComponent implements OnInit {
     }
   }
 
-  save(): void {
-    this._spinner.show();
+  save(brand : NgModel, model : NgModel, tax : NgModel, year : NgModel, capacity : NgModel): void {
+    // validation
+    if(model.valid && brand.valid && tax.valid && year.valid && capacity.valid){
+      this._spinner.show();
 
-    if (!this.id_car) {
-      axios.post('/api/car', this.modal).then(() => {
-        this._spinner.hide();
-        this.toastr.success('Informația a fost salvată cu succes!');
-        this.activeModal.close();
-      }).catch(() => this.toastr.error('Eroare la salvarea informației!'));
-    } else {
-      axios.put('/api/car', this.modal).then(() => {
-        this._spinner.hide();
-        this.toastr.success('Informația a fost modificată cu succes!');
-        this.activeModal.close();
-      }).catch(() => this.toastr.error('Eroare la modificarea informației!'));
+      if (!this.id_car) {
+        axios.post('/api/car', this.modal).then(() => {
+          this._spinner.hide();
+          this.toastr.success('Informația a fost salvată cu succes!');
+          this.activeModal.close();
+        }).catch(() => this.toastr.error('Eroare la salvarea informației!'));
+      } else {
+        axios.put('/api/car', this.modal).then(() => {
+          this._spinner.hide();
+          this.toastr.success('Informația a fost modificată cu succes!');
+          this.activeModal.close();
+        }).catch(() => this.toastr.error('Eroare la modificarea informației!'));
+      }
+    } else{
+      this.toastr.error('Vă rugăm să verificați câmpurile completate!');
+      this.showError = true;
     }
   }
 
