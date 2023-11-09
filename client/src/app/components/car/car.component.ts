@@ -7,7 +7,7 @@ import { CarModalComponent } from './car-modal/car-modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-car',
@@ -18,6 +18,13 @@ export class CarComponent implements OnInit {
   faTrashAlt = faTrashAlt; faEdit = faEdit; faChevronUp = faChevronUp; faPlus = faPlus;
   limit: number = 70; showBackTop: string = '';
   cars: any = [];
+  filteredCars: any = [];
+  // variables for filters
+  brandFilter: string = '';
+  modelFilter: string = '';
+  yearFilter: string = '';
+  capacityFilter: string = '';
+  taxFilter: string = '';
 
   constructor(private _modal: NgbModal, private _spinner: NgxSpinnerService, private toastr: ToastrService) { SET_HEIGHT('view', 20, 'height'); }
 
@@ -29,6 +36,7 @@ export class CarComponent implements OnInit {
     this._spinner.show();
     axios.get('/api/car').then(({ data }) => {
       this.cars = data;
+      this.filteredCars = this.cars;
       this._spinner.hide();
     }).catch(() => this.toastr.error('Eroare la preluarea informațiilor!'));
   }
@@ -72,5 +80,15 @@ export class CarComponent implements OnInit {
   onScrollTop(): void {
     SCROLL_TOP('view-scroll-cars', 0);
     this.limit = 70;
+  }
+
+  applyFilters(): void {
+    this.filteredCars = this.cars.filter((car: any) =>
+      car.brand.includes(this.brandFilter) &&
+      car.model.includes(this.modelFilter) &&
+      car.year.includes(this.yearFilter) &&
+      car.capacity.includes(this.capacityFilter) &&
+      car.tax.includes(this.taxFilter)
+    );
   }
 }
