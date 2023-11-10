@@ -7,7 +7,7 @@ import { PersonModalComponent } from './person-modal/person-modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-person',
@@ -19,6 +19,12 @@ export class PersonComponent implements OnInit {
   faTrashAlt = faTrashAlt; faEdit = faEdit; faChevronUp = faChevronUp; faPlus = faPlus;
   limit: number = 70; showBackTop: string = '';
   persons: any = [];
+  filteredPersons: any = [];
+  // variables for filters
+  firstNameFilter: string = '';
+  lastNameFilter: string = '';
+  cnpFilter: string = '';
+  ageFilter: string = '';
 
   constructor(private _modal: NgbModal, private _spinner: NgxSpinnerService, private toastr: ToastrService) { SET_HEIGHT('view', 20, 'height'); }
 
@@ -30,6 +36,7 @@ export class PersonComponent implements OnInit {
     this._spinner.show();
     axios.get('/api/person').then(({ data }) => {
       this.persons = data;
+      this.filteredPersons = this.persons;
       this._spinner.hide();
     }).catch(() => this.toastr.error('Eroare la preluarea informațiilor!'));
   }
@@ -75,4 +82,12 @@ export class PersonComponent implements OnInit {
     this.limit = 70;
   }
 
+  applyFilters(): void {
+    this.filteredPersons = this.persons.filter((person: any) =>
+      person.firstName.includes(this.firstNameFilter) &&
+      person.lastName.includes(this.lastNameFilter) &&
+      person.cnp.includes(this.cnpFilter) &&
+      person.age.includes(this.ageFilter)
+    );
+  }
 }

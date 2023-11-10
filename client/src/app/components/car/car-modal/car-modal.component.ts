@@ -30,9 +30,9 @@ export class CarModalComponent implements OnInit {
     }
   }
 
-  save(brand : NgModel, model : NgModel, tax : NgModel, year : NgModel, capacity : NgModel): void {
+  save(brand : NgModel, model : NgModel, year : NgModel, capacity : NgModel): void {
     // validation
-    if(model.valid && brand.valid && tax.valid && year.valid && capacity.valid){
+    if(model.valid && brand.valid && year.valid && capacity.valid){
       this._spinner.show();
 
       if (!this.id_car) {
@@ -64,5 +64,21 @@ export class CarModalComponent implements OnInit {
     const all_words = (this_word: any) => this_word;
 
     return isWordThere.every(all_words);
+  }
+
+  calculateTax(): number {
+    const capacity = this.modal.capacity;
+  
+    if (capacity < 1500) {
+      return 50;
+    } else if (capacity >= 1500 && capacity < 2000) {
+      return 100;
+    } else {
+      return 200;
+    }
+  }
+  
+  updateTax() : void {
+    this.modal.tax = this.calculateTax();
   }
 }

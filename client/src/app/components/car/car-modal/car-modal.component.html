@@ -48,7 +48,7 @@
   <div class='row'>
     <label class='col-2 control-label'>Capacitate*</label>
     <div class='col-9'>
-      <input name="capacity" type='number' [(ngModel)]='modal.capacity' class='form-control' placeholder='Capacitate...' max='9999' required #capacity="ngModel"/>
+      <input name="capacity" type='number' [(ngModel)]='modal.capacity' class='form-control' placeholder='Capacitate...' max='9999' required #capacity="ngModel" (keyup)="updateTax()"/>
       <div
         *ngIf="capacity.invalid && (showError || capacity.touched)"
       >
@@ -62,20 +62,12 @@
   <div class='row'>
     <label class='col-2 control-label'>Taxa de impozit*</label>
     <div class='col-9'>
-      <input name="tax" type='number' [(ngModel)]='modal.tax' class='form-control' placeholder='Taxa de impozit...' max='9999' required #tax="ngModel"/>
-      <div
-        *ngIf="tax.invalid && (showError || tax.touched)"
-      >
-        <div *ngIf="tax.errors?.['required']">Taxa de impozit este un câmp obligatoriu!</div>
-        <div *ngIf="tax.errors?.['max']">
-          Taxa trebuie să conțină maxim 4 cifre!
-        </div>
-      </div>
+      <input name="tax" type='number' [(ngModel)]='modal.tax' class='form-control' placeholder='Taxa de impozit...' max='9999' required disabled/>
     </div>
   </div>
 </div>
 
 <div class='modal-footer'>
   <button type='button' class='btn btn-outline-dark' (click)='activeModal.dismiss()'>Renunță</button>
-  <button type='button' class='btn btn-success' (click)='save(brand, model, tax, year, capacity)'>Salvează</button>
+  <button type='button' class='btn btn-success' (click)='save(brand, model, year, capacity)'>Salvează</button>
 </div>

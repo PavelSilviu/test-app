@@ -17,39 +17,19 @@
         <thead>
           <tr class='table-bordered'>
             <th width='60px' rowspan='2'>Nr. Crt.</th>
-            <th width='60px'>
-              <div class="col-header">
-                <span>Marcă</span>
-                <input [(ngModel)]="brandFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()">
-              </div>
-            </th>
-            <th width='60px'>
-              <div class="col-header">
-                <span>Model</span>
-                <input [(ngModel)]="modelFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()">
-              </div>
-            </th>
-            <th width='60px'>
-              <div class="col-header">
-                <span>Anul fabricației</span>
-                <input [(ngModel)]="yearFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()">
-              </div>
-            </th>
-            <th width='60px'>
-              <div class="col-header">
-                <span>Capacitate Cilindrică</span>
-                <input [(ngModel)]="capacityFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()">
-              </div>
-            </th>
-            <th width='60px'>
-              <div class="col-header">
-                <span>Taxa de impozit</span>
-                <input [(ngModel)]="taxFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()">
-              </div>
-            </th>
+            <th width='60px'>Marcă</th>
+            <th width='60px'>Model</th>
+            <th width='60px'>Anul fabricației</th>
+            <th width='60px'>Capacitate Cilindrică</th>
+            <th width='60px'>Taxa de impozit</th>
             <th rowspan='2' width='60px'></th>
           </tr>
           <tr>
+            <th><input [(ngModel)]="brandFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()"></th>
+            <th><input [(ngModel)]="modelFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()"></th>
+            <th><input [(ngModel)]="yearFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()"></th>
+            <th><input [(ngModel)]="capacityFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()"></th>
+            <th><input [(ngModel)]="taxFilter" class='form-control input-xs' placeholder='Căutare...' (keyup)="applyFilters()"></th>
           </tr>
         </thead>
       </table>

@@ -4,6 +4,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { REPLACE_DIACRITICS } from 'src/app/utils/utils-input';
 import { ToastrService } from 'ngx-toastr';
+import { NgModel } from '@angular/forms';
+import { last } from 'rxjs';
+import { type } from 'os';
 
 @Component({
   selector: 'app-person-modal',
@@ -13,6 +16,8 @@ export class PersonModalComponent implements OnInit {
   @Input() id_person: number | undefined;
 
   modal = {} as any;
+
+  showError : boolean = false;
 
   constructor(private _spinner: NgxSpinnerService, public activeModal: NgbActiveModal, private toastr: ToastrService) {
   }
@@ -27,21 +32,27 @@ export class PersonModalComponent implements OnInit {
     }
   }
 
-  save(): void {
-    this._spinner.show();
+  save(firstName: NgModel, lastName: NgModel, cnp: NgModel): void {
+    // validation
+    if(firstName.valid && lastName.valid && cnp.valid){
+      this._spinner.show();
 
-    if (!this.id_person) {
-      axios.post('/api/person', this.modal).then(() => {
-        this._spinner.hide();
-        this.toastr.success('Informația a fost salvată cu succes!');
-        this.activeModal.close();
-      }).catch(() => this.toastr.error('Eroare la salvarea informației!'));
+      if (!this.id_person) {
+        axios.post('/api/person', this.modal).then(() => {
+          this._spinner.hide();
+          this.toastr.success('Informația a fost salvată cu succes!');
+          this.activeModal.close();
+        }).catch(() => this.toastr.error('Eroare la salvarea informației!'));
+      } else {
+        axios.put('/api/person', this.modal).then(() => {
+          this._spinner.hide();
+          this.toastr.success('Informația a fost modificată cu succes!');
+          this.activeModal.close();
+        }).catch(() => this.toastr.error('Eroare la modificarea informației!'));
+      }
     } else {
-      axios.put('/api/person', this.modal).then(() => {
-        this._spinner.hide();
-        this.toastr.success('Informația a fost modificată cu succes!');
-        this.activeModal.close();
-      }).catch(() => this.toastr.error('Eroare la modificarea informației!'));
+      this.toastr.error('Vă rugăm să verificați câmpurile completate!');
+      this.showError = true;
     }
   }
 
@@ -55,5 +66,34 @@ export class PersonModalComponent implements OnInit {
     const all_words = (this_word: any) => this_word;
 
     return isWordThere.every(all_words);
+  }
+
+  calculateAge(): any {
+    let cnp = this.modal.cnp;
+    cnp = cnp.toString();
+    let age;
+
+    if(cnp.length == 13){
+      const year = cnp.substring(1,3);
+      const month = cnp.substring (3,5);
+      const day = cnp.substring (5,7);
+      let birthDate;
+
+      if(cnp[0] == 1 || cnp[0] == 2){
+        birthDate = new Date(19 + year, month, day);
+      } else{
+        birthDate = new Date(20 + year, month, day);
+      }
+    
+      let ageMilisec = new Date().getTime() - birthDate.getTime();
+      let milisecInOneYear = 1000 * 60 * 60 * 24 * 365.25; //365.2 pt ani bisecti
+      age = Math.floor(ageMilisec / milisecInOneYear);
+      //console.log(age, "varsta")
+    }
+    return age;
+  }
+  
+  updateAge() : void {
+    this.modal.age = this.calculateAge();
   }
 }
