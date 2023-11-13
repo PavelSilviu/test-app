@@ -26,15 +26,23 @@ export class PersonModalComponent implements OnInit {
   constructor(private _spinner: NgxSpinnerService, public activeModal: NgbActiveModal, private toastr: ToastrService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (this.id_person) {
       this._spinner.show();
-      axios.get(`/api/person/${this.id_person}`).then(({ data }) => {
-        this.modal = data;
+      try{
+        const personsData = await axios.get(`/api/person/${this.id_person}`);
+        this.modal = personsData.data;
+        
+        const carsData = await axios.get('/api/car');
+        this.cars = carsData.data.map((i : any) => { i.fullDetails = i.brand + ' ' + i.model + ' Capacity: ' + i.capacity + ' Tax: ' + i.tax; return i; });
+        // daca are id ii iei masinile personale
+        const ownedCarsData = await axios.get(`/api/junction/${this.id_person}/cars`);
+        this.selected = ownedCarsData.data.map((i : any) => { i.fullDetails = i.brand + ' ' + i.model + ' Capacity: ' + i.capacity + ' Tax: ' + i.tax; return i; });
+        console.log(this.cars,"masini");
         this._spinner.hide();
-      }).catch(() => this.toastr.error('Eroare la preluarea informației!'));
-    
-      // daca are id ii iei masinile personale
+      } catch (error){
+        this.toastr.error('Eroare la preluarea informației!')
+      }
     } else{
       axios.get('/api/car').then(({ data }) => {
         this.cars = data.map((i : any) => { i.fullDetails = i.brand + ' ' + i.model + ' Capacity: ' + i.capacity + ' Tax: ' + i.tax; return i; });
@@ -43,27 +51,36 @@ export class PersonModalComponent implements OnInit {
     }
   }
 
-  save(firstName: NgModel, lastName: NgModel, cnp: NgModel): void {
+  async save(firstName: NgModel, lastName: NgModel, cnp: NgModel) {
     // validation
     if(firstName.valid && lastName.valid && cnp.valid){
       this._spinner.show();
 
       if (!this.id_person) {
-        axios.post('/api/person', this.modal).then(() => {
+        try{
+          const response = await axios.post('/api/person', this.modal);
+          //daca nu are id, creezi intrare noua in Junction
+          await axios.post(`/api/junction/${response.data.createdPersonId}/cars/`, { carIds: this.selected });
+          
           this._spinner.hide();
           this.toastr.success('Informația a fost salvată cu succes!');
           this.activeModal.close();
-        }).catch(() => this.toastr.error('Eroare la salvarea informației!'));
-
-        //daca nu are id, creezi intrare noua in Junction
+        } catch (error){
+          console.log(error);
+          this.toastr.error('Eroare la modificarea informației!');
+        }
       } else {
-        axios.put('/api/person', this.modal).then(() => {
+        try{
+          await axios.put('/api/person', this.modal);
+          //daca are id, modifici o intrare din Junction
+          await axios.put(`/api/junction/${this.id_person}/cars/`, { carIds: this.selected });
           this._spinner.hide();
           this.toastr.success('Informația a fost modificată cu succes!');
           this.activeModal.close();
-        }).catch(() => this.toastr.error('Eroare la modificarea informației!'));
-
-        //daca are id, modifici o intrare din Junction
+        } catch (error){
+          console.log(error);
+          this.toastr.error('Eroare la modificarea informației!');
+        }
       }
     } else {
       this.toastr.error('Vă rugăm să verificați câmpurile completate!');
@@ -110,6 +127,14 @@ export class PersonModalComponent implements OnInit {
   
   updateAge() : void {
     this.modal.age = this.calculateAge();
+  }
+
+  compareCars(car1: any, car2: any): boolean {
+    return car1 && car2 && car1.id === car2.id;
+  }
+
+  isAtLeastOneCarSelected(): boolean {
+    return this.selected && this.selected.length > 0;
   }
 
 }

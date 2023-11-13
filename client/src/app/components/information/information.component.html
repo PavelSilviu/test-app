@@ -39,8 +39,8 @@
         </button>
         <table class='table table-hover table-striped table-bordered font-14 p-0'>
           <tbody>
-            <tr *ngFor='let r of filteredInformations.slice(0, limit)' (dblclick)='addEdit(r.id)' class='cursor-pointer'>
-              <td width='60px' class='text-center'>Harcode 1</td>
+            <tr *ngFor='let r of filteredInformations.slice(0, limit);index as index' (dblclick)='addEdit(r.id)' class='cursor-pointer'>
+              <td width='60px' class='text-center'>{{index+1}}</td>
               <td>{{r.name}}</td>
               <td width='100px' class='text-center'>{{r.type}}</td>
               <td width='60px' class='text-center'>{{r.liked}}</td>

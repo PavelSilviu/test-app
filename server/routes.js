@@ -12,6 +12,8 @@ module.exports = app => {
 
   app.use('/api/person', require('./routes/person')(app));
 
+  app.use('/api/junction', require('./routes/junction')(app));
+
   app.route('*/:url(api|auth|components|app|bower_components|assets)/*').get(errors[404]);
 
   /* BUILD */

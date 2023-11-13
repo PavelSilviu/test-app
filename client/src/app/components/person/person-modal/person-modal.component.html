@@ -45,11 +45,13 @@
       <ng-select 
         [items]="cars"
         bindLabel="fullDetails"
-        bindValue="fullDetails"
+        bindValue="id"
         placeholder="Selectează Mașini"
         [multiple]="true"
-        [(ngModel)]="selected"> 
+        [(ngModel)]="selected"
+        [compareWith]="compareCars">
       </ng-select>
+      <div *ngIf="showError && !isAtLeastOneCarSelected()" style="margin-top:10px">Selectați cel puțin o mașină!</div>
     </div>
   </div>
 </div>

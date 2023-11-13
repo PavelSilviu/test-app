@@ -24,7 +24,6 @@ module.exports = db => {
       id = req.params.id;
       db.query(`SELECT id, name, type, liked
       FROM "Information" WHERE id=:id`, { replacements: {id}, type: db.QueryTypes.SELECT }).then(resp => {
-        console.log(resp,"raspunss");
         res.send(resp[0]);
       }).catch(() => res.status(401));
     },

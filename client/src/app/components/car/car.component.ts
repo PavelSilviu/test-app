@@ -54,12 +54,16 @@ export class CarComponent implements OnInit {
     modalRef.componentInstance.title = `Ștergere informație`;
     modalRef.componentInstance.content = `<p class='text-center mt-1 mb-1'>Doriți să ștergeți mașina cu brandul <b>${car.brand}</b>, modelul: <b>${car.model}</b>, anul: <b>${car.year}</b>, capacitatea cilindrică: <b>${car.capacity}</b>, taxa: <b>${car.tax}</b>?`;
     modalRef.closed.subscribe(() => {
-      axios.delete(`/api/car/${car.id}`).then(() => {
+      try{
+        axios.delete(`/api/car/${car.id}`);
+        //stergere si din Junction 
+        axios.delete(`/api/junction/cars/${car.id}/`);
+
         this.toastr.success('Informația a fost ștearsă cu succes!');
         this.loadData();
-      }).catch(() => this.toastr.error('Eroare la ștergerea informației!'));
-    
-      //stergere si din Junction
+      } catch (error) {
+        this.toastr.error('Eroare la ștergerea informației!')
+      }
     });
   }
 

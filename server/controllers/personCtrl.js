@@ -1,8 +1,9 @@
 module.exports = db => {
     return {
       create: (req, res) => {
-        db.models.Person.create(req.body).then(() => {
-          res.send({ success: true });
+        db.models.Person.create(req.body).then(createdPerson => {
+          const createdPersonId = createdPerson.id;
+          res.send({ success: true, createdPersonId });
         }).catch(() => res.status(401));
       },
   
@@ -19,7 +20,7 @@ module.exports = db => {
       },
   
       find: (req, res) => {
-        id = req.params.id;
+        const id = req.params.id;
         db.query(`SELECT *
         FROM "Person" WHERE id=:id`, { replacements: {id}, type: db.QueryTypes.SELECT }).then(resp => {
           res.send(resp[0]);

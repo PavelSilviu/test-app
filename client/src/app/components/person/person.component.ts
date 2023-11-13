@@ -25,6 +25,7 @@ export class PersonComponent implements OnInit {
   lastNameFilter: string = '';
   cnpFilter: string = '';
   ageFilter: string = '';
+  carFilter: string = '';
 
   constructor(private _modal: NgbModal, private _spinner: NgxSpinnerService, private toastr: ToastrService) { SET_HEIGHT('view', 20, 'height'); }
 
@@ -37,6 +38,14 @@ export class PersonComponent implements OnInit {
     axios.get('/api/person').then(({ data }) => {
       this.persons = data;
       this.filteredPersons = this.persons;
+      this.persons.forEach(async (person: any) => {
+        const ownedCarsData = await axios.get(`/api/junction/${person.id}/cars`);
+        this.filteredPersons.map((i : any) => {
+          i.cars = ownedCarsData.data.map((j : any) => { j.fullDetails = j.brand + ' ' + j.model + ' Capacity: ' + j.capacity + ' Tax: ' + j.tax; return j.fullDetails; });
+          i.cars = i.cars.join('; ');
+          return i;
+        })
+      })
       this._spinner.hide();
     }).catch(() => this.toastr.error('Eroare la preluarea informațiilor!'));
   }
@@ -54,12 +63,16 @@ export class PersonComponent implements OnInit {
     modalRef.componentInstance.title = `Ștergere informație`;
     modalRef.componentInstance.content = `<p class='text-center mt-1 mb-1'>Doriți să ștergeți persoana cu numele <b>${person.firstName}</b>, prenumele: <b>${person.lastName}</b>, CNP-ul: <b>${person.cnp}</b>, vârsta : <b>${person.age}</b>?`;
     modalRef.closed.subscribe(() => {
-      axios.delete(`/api/person/${person.id}`).then(() => {
+      try{
+        axios.delete(`/api/person/${person.id}`);
+        //stergere si din Junction 
+        axios.delete(`/api/junction/${person.id}/cars`);
+
         this.toastr.success('Informația a fost ștearsă cu succes!');
         this.loadData();
-      }).catch(() => this.toastr.error('Eroare la ștergerea informației!'));
-
-      //stergere si din Junction 
+      } catch (error) {
+        this.toastr.error('Eroare la ștergerea informației!')
+      }
     });
   }
 
@@ -89,7 +102,8 @@ export class PersonComponent implements OnInit {
       person.firstName.includes(this.firstNameFilter) &&
       person.lastName.includes(this.lastNameFilter) &&
       person.cnp.includes(this.cnpFilter) &&
-      person.age.includes(this.ageFilter)
+      person.age.includes(this.ageFilter) &&
+      person.cars.includes(this.carFilter)
     );
   }
 }
