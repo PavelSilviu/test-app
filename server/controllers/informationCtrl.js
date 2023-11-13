@@ -21,8 +21,10 @@ module.exports = db => {
     },
 
     find: (req, res) => {
+      id = req.params.id;
       db.query(`SELECT id, name, type, liked
-      FROM "Information"`, { type: db.QueryTypes.SELECT }).then(resp => {
+      FROM "Information" WHERE id=:id`, { replacements: {id}, type: db.QueryTypes.SELECT }).then(resp => {
+        console.log(resp,"raspunss");
         res.send(resp[0]);
       }).catch(() => res.status(401));
     },

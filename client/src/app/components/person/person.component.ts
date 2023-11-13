@@ -58,6 +58,8 @@ export class PersonComponent implements OnInit {
         this.toastr.success('Informația a fost ștearsă cu succes!');
         this.loadData();
       }).catch(() => this.toastr.error('Eroare la ștergerea informației!'));
+
+      //stergere si din Junction 
     });
   }
 

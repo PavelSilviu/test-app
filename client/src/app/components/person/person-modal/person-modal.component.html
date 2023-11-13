@@ -39,6 +39,19 @@
       <input type="number" [(ngModel)]='modal.age' name="age" type='number' class='form-control' placeholder='Vârsta...' max='999' required #age="ngModel" disabled/>
     </div>
   </div>
+  <div class='row'>
+    <label class='col-2 control-label'>Mașini*</label>
+    <div class='col-9'>
+      <ng-select 
+        [items]="cars"
+        bindLabel="fullDetails"
+        bindValue="fullDetails"
+        placeholder="Selectează Mașini"
+        [multiple]="true"
+        [(ngModel)]="selected"> 
+      </ng-select>
+    </div>
+  </div>
 </div>
 
 <div class='modal-footer'>

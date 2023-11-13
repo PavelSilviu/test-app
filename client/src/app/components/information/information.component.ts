@@ -7,6 +7,8 @@ import { InformationModalComponent } from './information-modal/information-modal
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { info } from 'console';
 
 @Component({
   selector: 'app-information',
@@ -17,6 +19,11 @@ export class InformationComponent implements OnInit {
   faTrashAlt = faTrashAlt; faEdit = faEdit; faChevronUp = faChevronUp; faPlus = faPlus;
   limit: number = 70; showBackTop: string = '';
   informations: any = [];
+  filteredInformations: any = [];
+  // vars for filters
+  nameFilter: string = '';
+  typeFilter: string = '';
+  likedFilter: string = '';
 
   constructor(private _modal: NgbModal, private _spinner: NgxSpinnerService, private toastr: ToastrService) { SET_HEIGHT('view', 20, 'height'); }
 
@@ -28,6 +35,7 @@ export class InformationComponent implements OnInit {
     this._spinner.show();
     axios.get('/api/information').then(({ data }) => {
       this.informations = data;
+      this.filteredInformations = this.informations;
       this._spinner.hide();
     }).catch(() => this.toastr.error('Eroare la preluarea informațiilor!'));
   }
@@ -35,6 +43,7 @@ export class InformationComponent implements OnInit {
   addEdit = (id_information?: number): void => {
     const modalRef = this._modal.open(InformationModalComponent, {size: 'lg', keyboard: false, backdrop: 'static'});
     modalRef.componentInstance.id_information = id_information;
+    console.log(id_information,"catre model")
     modalRef.closed.subscribe(() => {
       this.loadData();
     });
@@ -71,5 +80,13 @@ export class InformationComponent implements OnInit {
   onScrollTop(): void {
     SCROLL_TOP('view-scroll-informations', 0);
     this.limit = 70;
+  }
+  
+  applyFilters(): void {
+    this.filteredInformations = this.informations.filter((information: any) =>
+      information.name.includes(this.nameFilter) &&
+      information.type.toString().includes(this.typeFilter) &&
+      information.liked.includes(this.likedFilter)
+    );
   }
 }

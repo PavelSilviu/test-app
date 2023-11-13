@@ -19,9 +19,11 @@ export class InformationModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.id_information) {
+      console.log(this.id_information,"in pop-up");
       this._spinner.show();
       axios.get(`/api/information/${this.id_information}`).then(({ data }) => {
         this.modal = data;
+        console.log(data,'date luate din get pop-up');
         this._spinner.hide();
       }).catch(() => this.toastr.error('Eroare la preluarea informației!'));
     }

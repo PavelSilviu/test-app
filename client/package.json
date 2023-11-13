@@ -29,7 +29,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@ng-bootstrap/ng-bootstrap": "^13.1.0",
-    "@ng-select/ng-select": "^9.0.2",
+    "@ng-select/ng-select": "^9.1.0",
     "@popperjs/core": "^2.11.6",
     "axios": "^1.1.3",
     "bootstrap": "^5.2.2",
